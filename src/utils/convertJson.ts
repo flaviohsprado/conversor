@@ -16,9 +16,6 @@ export class JsonUtils {
                     items.push({ [key]: value });
                 }
             }
-
-            // place at position 0
-            //items.unshift(auxRootObj);
         }
 
         return items as object[];
