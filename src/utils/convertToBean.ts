@@ -5,6 +5,9 @@ export class JavaSpringUtils {
         className?: string
     ): string {
         let xml = `<bean class="${path}.${className}">\n`;
+        xml += `<import type="com.fasterxml.jackson.annotation.JsonIgnoreProperties"/>\n`
+        xml += `<import type="com.fasterxml.jackson.annotation.JsonProperty"/>\n`
+        xml += `<annotations>@JsonIgnoreProperties(ignoreUnknown = true)</annotations>\n`
 
         for (const propertyName in properties) {
             if (properties.hasOwnProperty(propertyName)) {
