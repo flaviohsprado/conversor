@@ -7,6 +7,7 @@ import {
   Input,
   Stack,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import "./App.css";
@@ -16,33 +17,44 @@ import { JavaSpringUtils } from "./utils/convertToBean";
 export default function App() {
   const [jsonConverted, setJsonConverted] = useState<string>("");
   const [path, setPath] = useState<string>("");
+  const toast = useToast();
 
   function convert(object: string) {
-    const objects = JsonUtils.convertToArrayOfObject(JSON.parse(object));
+    try {
+      const objects = JsonUtils.convertToArrayOfObject(JSON.parse(object));
 
-    let xmlBean: string = "";
+      let xmlBean: string = "";
 
-    for (const object of objects) {
-      let objectAux;
-      let className: string;
+      for (const object of objects) {
+        let objectAux;
+        let className: string;
 
-      if (Array.isArray(Object.entries(object)[0][1])) {
-        objectAux = Object.entries(object)[0][1][0];
-      } else {
-        objectAux = Object.entries(object)[0][1];
+        if (Array.isArray(Object.entries(object)[0][1])) {
+          objectAux = Object.entries(object)[0][1][0];
+        } else {
+          objectAux = Object.entries(object)[0][1];
+        }
+
+        className = String(Object.entries(object)[0][0]);
+        className = `${className[0].toUpperCase() + className.slice(1)}DTO`;
+
+        xmlBean += JavaSpringUtils.generateBeanXml(
+          objectAux as any,
+          path,
+          className
+        );
       }
 
-      className = String(Object.entries(object)[0][0]);
-      className = `${className[0].toUpperCase() + className.slice(1)}DTO`;
-
-      xmlBean += JavaSpringUtils.generateBeanXml(
-        objectAux as any,
-        path,
-        className
-      );
+      setJsonConverted(xmlBean);
+    } catch (error) {
+      toast({
+        title: "JSON Object",
+        description: "Your JSON object is incorrect",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
     }
-
-    setJsonConverted(xmlBean);
   }
 
   return (
