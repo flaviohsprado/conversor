@@ -29,7 +29,7 @@ export class JavaSpringUtils {
                     // Array of objects
                     if (propertyValue.length > 0 && typeof propertyValue[0] === "object") {
                         //const elementType = Object.keys(propertyValue[0])[0];
-                        xml += `<property name="${propertyName}" type="java.util.List&alt;${path}.${classNameAux}>">\n`;
+                        xml += `<property name="${propertyName}" type="java.util.List&lt;${path}.${classNameAux}>">\n`;
                         xml += `    <annotations>\n`;
                         xml += `        @JsonProperty("${propertyName}")\n`;
                         xml += `    </annotations>\n`;
